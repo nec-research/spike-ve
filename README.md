@@ -87,9 +87,8 @@ Logs go to stdout; redirect them to files if you want to keep them.
 ### Step 1: inputs and series (`build_inputs.sh`)
 
 ```bash
-GPU=0 scripts/build_inputs.sh            # all stages, in order
-# or stage by stage:
-GPU=0 scripts/build_inputs.sh msa encode predecessors
+# steps in order
+GPU=0 scripts/build_inputs.sh encode predecessors
 GPU=0 scripts/build_inputs.sh series pca sidecar pairs
 ```
 
