@@ -1,7 +1,7 @@
-# External Python packages needed to run the RECOMB 2027 pipeline (nothing else is imported from outside
+# External Python packages needed to run the SpikeVE pipeline (nothing else is imported from outside
 # this folder). Versions are the ones the paper results were produced with (Python 3.9.19, CUDA 12.4).
 # Install into a Python 3.9 environment:  pip install -r requirements.txt
-# A GPU with >= 11 GB memory is used by the trainers and by the ESM-1b encoder; CPU-only works for the
+# A GPU with >= 11 GB memory is used by the trainers and by the ESM-1 encoder; CPU-only works for the
 # analysis steps but is slow for training.
 
 # --- deep learning / sequence models
