@@ -97,7 +97,7 @@ What each stage does:
 
 | stage | output | notes |
 |---|---|---|
-| `msa` | `filtered_msa_S1_dedup.fasta` (86,086 records), `pruned_tree_S1_dedup.nwk` (provided in demo_data) | removes duplicate sequences keeping the earliest collection date |
+| `msa` | `filtered_msa_S1_dedup.fasta` (86,086 records, provided in demo_data), `pruned_tree_S1_dedup.nwk` (provided in demo_data) | removes duplicate sequences keeping the earliest collection date |
 | `encode` | ESM-1 layer 33 2D and average-token encodings under `encodings/ESM1B/filtered_msa_S1/` | slowest step; uses GPUs 0 and 1 by default |
 | `predecessors` | `predecessors_dict_bv-brc-matched/pred_by_nearest_ancestor_sampled.json` (provided in demo_data) | stochastic, seeded; see "Known differences" |
 | `series` | `series/by_nearest_ancestor_sampled_2022-12-01_k5_esm1_layer33/` under the `recomb2027` root (train/val/cal/test NPZ, `splits_raw.pkl`) | split dates come from `cal_threshold` (2022-09-01) and `split_threshold` (2022-12-01) in the dataset config |
