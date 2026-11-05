@@ -1,0 +1,23 @@
+# Shared data paths for the RECOMB 2027 configs.
+#
+# A config takes these values by adding a line such as
+#   _base_: ../../common/paths.yaml      (path relative to the config file)
+# and loads itself with recomb2027.config_io.load_config(). Any key the config sets itself overrides
+# the value here (the predictor configs set their own `root`, for example).
+#
+# To move the data, change the values in this file. scripts/common.sh asks for the cluster data root (D) and
+# takes its demo file paths (META, MSA_DEDUP, TREE_DEDUP, PCA_BASIS) from this file, via scripts/print_common_paths.py.
+
+root: /mnt/data/sars-cov2_spike/recomb2027
+
+msa_path: demo_dataset/sars_cov2_spike/msa_s1.fasta
+metadata_msa_path: demo_dataset/sars_cov2_spike/msa_metadata.csv
+tree_path: demo_dataset/sars_cov2_spike/usher_tree_pruned.nwk
+
+# 2d ESM encodings
+layer: 33
+enc_2d_dir: /mnt/data/sars-cov2_spike/encodings/ESM1B/filtered_msa_S1/2d/33
+# averaged-token ESM encodings (dataset series and ridge fits)
+encodings_dir: /mnt/data/sars-cov2_spike/encodings/ESM1B/filtered_msa_S1/average_token/33
+# fitted PCA transformation
+pca2d_basis_path: demo_dataset/sars_cov2_spike/pretrained/pca2d/pca2dk4_esm1_layer33_s1_train.pt

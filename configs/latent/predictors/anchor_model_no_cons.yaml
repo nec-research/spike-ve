@@ -1,0 +1,101 @@
+# Anchor model A4/no_cons: no consistency loss.
+# 
+# Run: scripts/run_experiment.sh no_cons
+#
+
+_base_: ../../common/paths.yaml
+
+model_cfg: configs/latent/models/model_gpt_mean_pca2dk4_s1_site_pool_attn.yaml
+
+adjusted_encodings: false
+input_feature_mode: gatt_plus
+append_edge_phylo_distance: false 
+edge_phylo_use_log1p: false 
+
+prediction_targets:
+  - mean
+  - pca2d_s1
+
+inference:
+  primary_target: mean
+
+target_loss_weights:
+  mean: 1.0
+  pca2d_s1: 0.75
+
+target_mode: diff
+batch_size: 64
+rescale_data: true
+
+mean_pca2d_v4:
+  enabled: false          # A4 without the mean<->pca2d consistency loss
+
+pca2d_curriculum:
+  mean_only_epochs: 10
+  weight_start: 0.1
+  weight_end: 0.75
+  ramp_epochs: 30
+  freeze_pca2d_head_during_mean_only: true
+  reset_early_stop_on_unfreeze: true
+
+pca2d_bottleneck:
+  enabled: true
+  dim: 256
+  site_hidden: 64
+  site_dim: 32
+  mixer_layers: 1
+  site_pool: attention
+  decode_rank: 256
+  mean_cond_attn: true
+  gated_residual: true
+  site_resolved_gate: true
+
+pca2d_ae_warmup:
+  epochs: 5
+  lr: 1e-3
+  freeze_encoder: false
+
+pca2d_residual: true
+amp_dtype: bf16
+all_step_loss: true
+
+pca2d_target_name: pca2d_s1
+pca2d_gatt_plus: true
+scale_pca2d: true
+pca2d_scaler_mode: flat
+
+jepa_aux:
+  enabled: false
+  mask_prob: 0.25
+  n_mask_per_sample: 1
+  predict_targets:
+    - mean
+  loss_weight: 0.2
+
+epochs: 160
+learning_rate: 1e-4
+weight_decay: 3e-4
+clip_grad_norm: 1.0
+save_checkpoint: True
+
+epoch_subsample_schedule: [0, 0, 1, 1] 
+
+scheduler:
+  reduce_lr_factor: 0.5
+  reduce_lr_patience: 12
+  reduce_lr_min_epoch: 40
+
+early_stopping:
+  enabled: true
+  patience: 20
+  metric: joint
+  normalize: true
+  target_weights:
+    mean: 1.0
+    pca2d_s1: 0.75
+
+logs_dir: ${root}/logs
+device: "auto"
+
+tensorboard_dir: ${root}/tensorboard/runs/esm1_layer33/anchor_model_no_cons
+checkpoint_dir: ${root}/models/checkpoints/esm1_layer33/anchor_model_no_cons

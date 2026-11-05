@@ -1,0 +1,46 @@
+# Mean-cond attention + gated residual.
+# Pair with: predictor_jepa_mean_pca2dk4_s1_site_pool_attn_abc.yaml
+
+name: "gpt_pca2d_site"
+
+input_dim: 8256
+embed_dim: 384
+ff_dim: 768
+output_dim: 1280
+
+num_heads: 8
+num_gpt_blocks: 3
+dropout: 0.15
+max_seq_len: 16
+
+pca2d_branch: true
+mean_pca2d_layernorm: true
+
+pca2d_bottleneck_dim: 256
+pca2d_flat_dim: 2848
+pca2d_seq_len: 712
+pca2d_k: 4
+pca2d_site_hidden: 64
+pca2d_site_dim: 32
+pca2d_site_mixer_layers: 1
+pca2d_site_pool: attention
+pca2d_decode_rank: 64
+pca2d_mean_cond_attn: true
+pca2d_gated_residual: true
+pca2d_residual: true
+
+prediction_targets:
+  - mean
+  - pca2d_s1
+
+target_output_dims:
+  mean: 1280
+  pca2d_s1: 2848
+
+target_loss_weights:
+  mean: 1.0
+  pca2d_s1: 0.75
+
+jepa_mask_token: false
+jepa_predict_targets:
+  - mean

@@ -1,0 +1,98 @@
+# Residual model B4  on anchor A4/no_cons (no consistency loss).
+#
+# Run: scripts/run_experiment.sh no_cons
+#
+
+_base_: ../../common/paths.yaml
+
+prediction_targets:
+  - mean
+  - pca2d_s1
+
+pca2d_target_name: pca2d_s1
+pca2d_gatt_plus: true
+scale_pca2d: true
+pca2d_scaler_mode: flat
+return_horizon_meta: false 
+return_all_step_horizon_meta: false 
+all_step_loss: true
+
+input_feature_mode: gatt_plus
+epoch_subsample_schedule: [0, 0, 1]
+target_mode: diff
+batch_size: 32
+seed: 42
+epochs: 120
+learning_rate: 2e-4
+weight_decay: 0.05
+clip_grad_norm: 1.0
+
+append_edge_phylo_to_head: false 
+edge_phylo_use_log1p: true
+append_msa_conservation: true
+append_msa_substitution: true
+substitution_target_activation: true
+
+horizon_embedding: false 
+horizon_embed_dim: 4
+redundancy_weighting: true
+
+training:
+  ema_decay: 0.999
+  lr_warmup_steps: 800
+  patience: 12
+  early_stop_metric: skill_full
+
+unified_v3:
+  cond_dim: 256
+  mem_dim: 128
+  site_channels: 96
+  dit_layers: 2
+  dit_heads: 4
+  dropout: 0.2
+  cov_rank: 4
+  bridge_sigma: 0.1
+  mse_aux_weight: 0.0
+  activation_aux_weight: 0.5
+  # Gate fix: BCE is now applied in mode=mse; gate reads post-DiT features (sees horizon).
+  activation_head_input: dit   # legacy: site_feats
+  activation_pos_weight: 1.0
+  use_zi: false
+  use_temporal_pca2d: true
+  temporal_proj_dim: 16
+  generative_mode: none
+  # B4 (Pca2dSiteUnifiedV4): the mean is read out from the gated residual mu_r via the
+  # frozen ridge below; there is NO independent mean MLP. use_mean_residual is therefore
+  # false (it was silently forced to false by the model when true).
+  use_independent_mean_mlp: false
+  use_mean_residual: false
+  mean_aux_weight: 1.0   # weight of the mean MSE on readout(gated mu_r)
+
+# Frozen ridge readout Delta-mean = A vec(a * mu_r). The file is the exact A stored in the
+# A4B4 checkpoint (mean_readout.linear.weight); previously no block existed and the ridge
+# was refit on the fly (train split, all edges) on every run.
+mean_pca2d_v4:
+  enabled: true
+  # Cross-view consistency is identically zero when mean = readout(mu_r) (no independent
+  # mean MLP), so it is disabled here. The checkpoint was trained with 0.2 on a zero-gradient
+  # term, hence results are unchanged. Use v4 config + use_independent_mean_mlp: true for a
+  # real consistency loss.
+  consistency_weight: 0.0
+  stop_grad_pca2d: true
+  ridge_alpha: 1.0
+  fit_split: train
+  ridge_coef_cache: ${root}/models/ridge_delta_pca2dk4_to_mean_esm1_layer33_fit.npz
+  ridge_cache_policy: refit
+
+early_stopping:
+  enabled: true
+  patience: 12
+  metric: skill_full
+
+logs_dir: ${root}/logs
+device: "auto"
+
+# checkpoint of the anchor model
+site_gpt_checkpoint: ${root}/models/checkpoints/esm1_layer33/anchor_model_no_cons/GPTModelPca2dSite_best_model.pt
+# checkpoint of the current residual model
+checkpoint_dir: ${root}/models/checkpoints/esm1_layer33/residual_model_no_cons

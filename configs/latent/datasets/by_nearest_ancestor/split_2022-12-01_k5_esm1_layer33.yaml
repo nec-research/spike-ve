@@ -1,0 +1,27 @@
+# Dataset for BV-BRC sampled τ4 S1 pipeline with cal split (for B3 early-stop).
+# Reuses the existing sampled processed_dir so train/val/pca2d stay in place;
+# prepare_dataset will add cal_dataset.npz when missing.
+#
+# Base (no cal): dataset_nearestancestror_bv_brc_sampled_tau4_2022-12-01_S1.yaml
+
+_base_: ../../../common/paths.yaml
+
+metadata_collision_source: csv
+
+predecessor_method: by_nearest_ancestor_sampled
+#predecessors_path:  ${root}/recomb2027/predecessors_dict_bv-brc-matched/pred_by_nearest_ancestor_sampled.json
+predecessors_path: demo_dataset/sars_cov2_spike/pretrained/predecessors/pred_by_nearest_ancestor_sampled.json
+
+series_len: 5
+split_criteria: by_date
+cal_threshold: "2022-09-01"
+split_threshold: "2022-12-01"
+split_mode: strict
+
+transformed_data: false
+filter_method: sequence
+shuffle: True
+fit_scaler: True
+save_scaler: True
+
+processed_dir: ${root}/series/by_nearest_ancestor_sampled_2022-12-01_k5_esm1_layer33

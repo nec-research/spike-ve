@@ -1,0 +1,17 @@
+# B1: sparse per-sample MSA substitution sidecar (prefix-only, no target leakage).
+#
+# Run:
+#   .venv/bin/python3 -m recomb2027.latent.predictors.build_msa_substitution_sidecar
+#
+# Or via experiment CLI:
+#   .venv/bin/python3 -m recomb2027.latent.predictors.run_pca2d_a0_a1_b1_experiments b1
+
+_base_: ../../common/paths.yaml
+
+dataset_config: configs/latent/datasets/by_nearest_ancestor/split_2022-12-01_k5_esm1_layer33.yaml
+
+splits: [train, cal, test]
+n_jobs: -1
+
+sidecar_dir: null  # defaults to dataset processed_dir in builder
+json_out: ${root}/logs/diagnostics/substitution_sidecar.json

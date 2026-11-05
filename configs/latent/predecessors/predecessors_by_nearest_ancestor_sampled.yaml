@@ -1,0 +1,46 @@
+# Predecessor reconstruction for the sampled tau4 S1 dataset used by the RECOMB 2027 paper.
+#
+# Derived from configs/latent/predecessors/predecessors_nearest_ancestor_S1_tau4.yaml of the
+# development repository, with two corrections:
+#   * root paths point at the cluster data root (the original wrote to a scratch directory);
+#   * output_path is the file that split_2022-12-01_k5_esm1_layer33.yaml
+#     reads as predecessors_path, so the series builder finds it without any edit.
+#
+# The parent choice is stochastic (predecessor_sampling.selection: sample, seed 0). Run with a fixed hash
+# seed, otherwise per-focal RNG streams differ between runs:
+#   PYTHONHASHSEED=0 python -m recomb2027.latent.predecessors.run_predecessors --cfg <this file>
+
+_base_: ../../common/paths.yaml
+
+metadata_collision_source: csv
+
+predecessor_method: by_nearest_ancestor
+output_path: ${root}/predecessors_dict_bv-brc-matched/pred_by_nearest_ancestor_sampled.json
+
+tree_schema: newick
+
+max_patristic_distance: null
+min_patristic_distance: null
+predecessor_rank: 1
+
+lineage_col: lineage
+lineage_min_shared_depth: 1
+lineage_aliases_path: demo_dataset/sars_cov2_spike/lineage_alias_keys.json
+lineage_recombinant_parents: null
+lineage_match: ancestor
+
+# Parallel workers (1 = serial, -1 = all CPUs).
+n_jobs: -1
+log_every: 1000
+
+predecessor_sampling:
+  selection: sample
+  top_m: 15
+  tau_patristic: 4.0
+  patristic_band: 4.0
+  tau_days: 120
+  seed: 0
+
+reversion_penalty:
+  enabled: false
+  
