@@ -97,11 +97,11 @@ What each stage does:
 
 | stage | output | notes |
 |---|---|---|
-| `msa` | `filtered_msa_S1_dedup.fasta` (86,086 records), `pruned_tree_S1_dedup.nwk` | removes duplicate sequences keeping the earliest collection date |
+| `msa` | `filtered_msa_S1_dedup.fasta` (86,086 records), `pruned_tree_S1_dedup.nwk` (provided in demo_data) | removes duplicate sequences keeping the earliest collection date |
 | `encode` | ESM-1 layer 33 2D and average-token encodings under `encodings/ESM1B/filtered_msa_S1/` | slowest step; uses GPUs 0 and 1 by default |
-| `predecessors` | `predecessors_dict_bv-brc-matched/pred_by_nearest_ancestor_sampled.json` (under the `recomb2027` root) | stochastic, seeded; see "Known differences" |
+| `predecessors` | `predecessors_dict_bv-brc-matched/pred_by_nearest_ancestor_sampled.json` (provided in demo_data) | stochastic, seeded; see "Known differences" |
 | `series` | `series/by_nearest_ancestor_sampled_2022-12-01_k5_esm1_layer33/` under the `recomb2027` root (train/val/cal/test NPZ, `splits_raw.pkl`) | split dates come from `cal_threshold` (2022-09-01) and `split_threshold` (2022-12-01) in the dataset config |
-| `pca` | pinned PCA-2D basis `pca2d_k4_layer33_S1_train.pt` | uses the pinned file by default; `PCA_REFIT=1` writes a refit next to it, see "Known differences" |
+| `pca` | pinned PCA-2D basis `pca2d_k4_layer33_S1_train.pt` (provided in demo_data) | uses the pinned file by default; `PCA_REFIT=1` writes a refit next to it, see "Known differences" |
 | `sidecar` | `msa_substitution_sidecar_{train,cal,val,test}.npz` | must be rebuilt whenever the MSA or the series change |
 | `pairs` | `validation_pairs_test.csv` (1,422 rows) | used by the analysis and the summary table |
 
