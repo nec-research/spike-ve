@@ -8,6 +8,8 @@
 # To move the data, change the values in this file. scripts/common.sh asks for the cluster data root (D) and
 # takes its demo file paths (META, MSA_DEDUP, TREE_DEDUP, PCA_BASIS) from this file, via scripts/print_common_paths.py.
 
+# IMPORTANT: change it according to your actual root directory, where you will keep the outputs, model weights, checkpoints, etc. 
+# This directory will be silently added as a prefix to the paths in pipeline steps
 root: /mnt/data/sars-cov2_spike/recomb2027
 
 msa_path: demo_dataset/sars_cov2_spike/msa_s1.fasta
