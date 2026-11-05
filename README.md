@@ -1,6 +1,6 @@
 # SpikeVE: Forecasting SARS-CoV-2 Spike Evolution in a Protein Language Model Latent Space
 
-This will be an official repository of "Forecasting SARS-CoV-2 Spike Evolution in a Protein Language Model Latent Space" paper.
+This will be an official repository of "Forecasting SARS-CoV-2 Spike Evolution in a Protein Language Model Latent Space" (SpikeVE) to support paper submission.
 
 This folder contains everything needed to reproduce the paper's main results from raw SARS-CoV-2 Spike S1 data, with
 the dataset (`split_2022-12-01_k5_esm1_layer33.yaml`,
