@@ -87,7 +87,7 @@ Logs go to stdout; redirect them to files if you want to keep them.
 
 ```bash
 # steps in order
-GPU=0 scripts/build_inputs.sh encode predecessors
+GPU=0 scripts/build_inputs.sh encode predecessors  # can be skipped with demo dataset
 GPU=0 scripts/build_inputs.sh series pca sidecar pairs
 ```
 
