@@ -5,8 +5,7 @@ This will be an official repository of "Forecasting SARS-CoV-2 Spike Evolution i
 This folder contains everything needed to reproduce the paper's main results from raw SARS-CoV-2 Spike S1 data, with
 the dataset (`split_2022-12-01_k5_esm1_layer33.yaml`,
 1,422 test series). It is self-contained: the Python code under `src/recomb2027/` is an isolated copy
-of the modules these steps use, and nothing here imports the development repository. The check in
-[`scripts/check_isolation.py`](scripts/check_isolation.py) verifies that.
+of the modules these steps use, and nothing here imports the development repository.
 
 The two model configuration are:
 
@@ -68,7 +67,7 @@ The shared data paths (data root, MSA, metadata, tree, encodings and PCA basis) 
 Each config takes them with a `_base_:` line, and every config is read with `recomb2027.config_io.load_config`.
 `scripts/common.sh` asks for the data root (`D`) in a terminal, or uses the default when `D` is set in the environment or the session is not interactive. The demo files (`META`, `MSA_DEDUP`, `TREE_DEDUP`, `PCA_BASIS`) come from `configs/common/paths.yaml`; set any of them in the environment or edit `scripts/common.sh` to use other files. `build_inputs.sh` stops before its `msa`, `encode` and `PCA_REFIT=1` steps if `MSA_DEDUP` is still the demo file.
 
-**Uncompress the demo MSA first.** To support the paper, the repository ships the demo alignment (sequence data and metadata retrieved from BV-BRC, https://www.bv-brc.org/) only in compressed form
+**Uncompress the demo MSA first.** To support the paper, the repository ships the demo alignment (sequence data and metadata retrieved from BV-BRC, https://www.bv-brc.org/ and processed to create MSA) only in compressed form
 (`demo_dataset/sars_cov2_spike/msa_s1.fasta.gz`, about 2 MB). The pipeline reads the uncompressed
 `demo_dataset/sars_cov2_spike/msa_s1.fasta` (`msa_path` in `configs/common/paths.yaml`), so run this once
 before any script, from this folder:
