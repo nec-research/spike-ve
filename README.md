@@ -112,12 +112,13 @@ What each stage does:
 ### Step 2: decoder (`train_decoder.sh`)
 
 ```bash
-GPU=0 scripts/train_decoder.sh
+GPU=0 scripts/train_decoder.sh   # can be skipped if use provided decoder weights in demo dataset
 ```
 
 Trains a decoder from latent ESM space to sequences, 20 epochs, PCA-2D + mean input). It is
 shared by both variants and must exist before the decode stage.  
-You can you the provided weights instead of training from scratch: `demo_dataset/sars_cov2_spike/pretrained/decoder/best.pt` (trained for ESM-1 670M UR100 layer33 embeddings on train split of the provided dataset).
+
+You can use the provided weights instead of training from scratch: `demo_dataset/sars_cov2_spike/pretrained/decoder/best.pt` (trained for ESM-1 670M UR100 layer33 embeddings on train split of the provided dataset).
 
 
 ### Step 3: anchor model → residual head for one variant (`run_experiment.sh`)
