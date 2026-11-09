@@ -129,7 +129,8 @@ The config files are `anchor_model_<variant>.yaml` (A4) and `residual_model_<var
 ```bash
 GPU=0 scripts/run_experiment.sh conscurr      # the variant argument is optional; default conscurr
 GPU=0 scripts/run_experiment.sh no_cons
-GPU=0 scripts/run_experiment.sh no_cons train_anchor train_residual   # optional stage list, see below
+GPU=0 scripts/run_experiment.sh conscurr train_anchor train_residual  # only train models
+GPU=0 scripts/run_experiment.sh conscurr infer decode swap swap_decode  # only infer and decode main and prefix-swapped predictions
 ```
 
 Stages, in order (run them one variant at a time, since they share the ridge cache). Without a stage list
