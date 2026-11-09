@@ -5,8 +5,7 @@ This will be an official repository of "Forecasting SARS-CoV-2 Spike Evolution i
 This folder contains everything needed to reproduce the paper's main results from raw SARS-CoV-2 Spike S1 data, with
 the dataset (`split_2022-12-01_k5_esm1_layer33.yaml`,
 1,422 test series). It is self-contained: the Python code under `src/recomb2027/` is an isolated copy
-of the modules these steps use, and nothing here imports the development repository. The check in
-[`scripts/check_isolation.py`](scripts/check_isolation.py) verifies that.
+of the modules these steps use, and nothing here imports the development repository.
 
 The two model configuration are:
 
@@ -68,7 +67,7 @@ The shared data paths (data root, MSA, metadata, tree, encodings and PCA basis) 
 Each config takes them with a `_base_:` line, and every config is read with `recomb2027.config_io.load_config`.
 `scripts/common.sh` asks for the data root (`D`) in a terminal, or uses the default when `D` is set in the environment or the session is not interactive. The demo files (`META`, `MSA_DEDUP`, `TREE_DEDUP`, `PCA_BASIS`) come from `configs/common/paths.yaml`; set any of them in the environment or edit `scripts/common.sh` to use other files. `build_inputs.sh` stops before its `msa`, `encode` and `PCA_REFIT=1` steps if `MSA_DEDUP` is still the demo file.
 
-**Uncompress the demo MSA first.** To support the paper, the repository ships the demo alignment (sequence data and metadata retrieved from BV-BRC, https://www.bv-brc.org/) only in compressed form
+**Uncompress the demo MSA first.** To support the paper, the repository ships the demo alignment (sequence data and metadata retrieved from BV-BRC, https://www.bv-brc.org/ and processed to create MSA) only in compressed form
 (`demo_dataset/sars_cov2_spike/msa_s1.fasta.gz`, about 2 MB). The pipeline reads the uncompressed
 `demo_dataset/sars_cov2_spike/msa_s1.fasta` (`msa_path` in `configs/common/paths.yaml`), so run this once
 before any script, from this folder:
@@ -88,7 +87,7 @@ Logs go to stdout; redirect them to files if you want to keep them.
 
 ```bash
 # steps in order
-GPU=0 scripts/build_inputs.sh encode predecessors
+GPU=0 scripts/build_inputs.sh encode predecessors  # can be skipped with demo dataset
 GPU=0 scripts/build_inputs.sh series pca sidecar pairs
 ```
 
@@ -113,12 +112,13 @@ What each stage does:
 ### Step 2: decoder (`train_decoder.sh`)
 
 ```bash
-GPU=0 scripts/train_decoder.sh
+GPU=0 scripts/train_decoder.sh   # can be skipped if use provided decoder weights in demo dataset
 ```
 
 Trains a decoder from latent ESM space to sequences, 20 epochs, PCA-2D + mean input). It is
 shared by both variants and must exist before the decode stage.  
-You can you the provided weights instead of training from scratch: `demo_dataset/sars_cov2_spike/pretrained/decoder/best.pt` (trained for ESM-1 670M UR100 layer33 embeddings on train split of the provided dataset).
+
+You can use the provided weights instead of training from scratch: `demo_dataset/sars_cov2_spike/pretrained/decoder/best.pt` (trained for ESM-1 670M UR100 layer33 embeddings on train split of the provided dataset).
 
 
 ### Step 3: anchor model → residual head for one variant (`run_experiment.sh`)
@@ -129,7 +129,8 @@ The config files are `anchor_model_<variant>.yaml` (A4) and `residual_model_<var
 ```bash
 GPU=0 scripts/run_experiment.sh conscurr      # the variant argument is optional; default conscurr
 GPU=0 scripts/run_experiment.sh no_cons
-GPU=0 scripts/run_experiment.sh no_cons train_anchor train_residual   # optional stage list, see below
+GPU=0 scripts/run_experiment.sh conscurr train_anchor train_residual  # only train models
+GPU=0 scripts/run_experiment.sh conscurr infer decode swap swap_decode  # only infer and decode main and prefix-swapped predictions
 ```
 
 Stages, in order (run them one variant at a time, since they share the ridge cache). Without a stage list
