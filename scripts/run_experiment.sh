@@ -105,9 +105,10 @@ fi
 
 if has swap_decode; then
   echo "=== [swap_decode] fused decoding of swapped predictions ==="
+  # The swap NPZ is a lineage-subst cloud (pred_baseline_* / pred_samples_* keys), not a flat array,
+  # so it is decoded with --lineage-subst and no --latent-key.
   $PY -m recomb2027.generation.run_decode_from_latents \
-    --latents-npz "$SWAP_NPZ" \
-    --latent-key test_pred_pca2d_flat_raw --mean-latent-key test_pred_mean_raw \
+    --latents-npz "$SWAP_NPZ" --lineage-subst \
     --decoder-checkpoint "$DECODER" \
     --decode-batch-size 256 --device cuda:0 --esm-repr-layer 33 --cycle-metric both \
     --source-fasta "$MSA_DEDUP" --fasta-out "$SWAP_FASTA" --output "${SWAP_FASTA%.fasta}.csv"
